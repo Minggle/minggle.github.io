@@ -8,7 +8,7 @@ menu: 关于
 permalink: /about/
 ---
 
-赚钱回村挖鱼塘；
+赚钱回村挖鱼塘!
 
 抽水！
 
@@ -22,7 +22,7 @@ permalink: /about/
 {% for website in site.data.social %}
 <li>{{website.sitename }}：<a href="{{ website.url }}" target="_blank">@{{ website.name }}</a></li>
 {% endfor %}
-{% if site.url contains 'mazhuang.org' %}
+{% if site.url contains 'mingsec.com' %}
 <li>
 微信公众号：<br />
 <img style="height:192px;width:192px;border:1px solid lightgrey;" src="{{ assets_base_url }}/assets/images/qrcode.jpg" alt="闷骚的程序员" />
