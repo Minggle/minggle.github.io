@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 系统服务端口监测脚本
-categories: Scan
+categories: Shell
 description: 系统服务端口监测脚本
 keywords: 服务, 监测, 脚本
 ---

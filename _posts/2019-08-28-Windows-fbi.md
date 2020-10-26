@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Windows 系统资源使用情况监测脚本
-categories: Windows
+categories: Shell
 description: Windows 系统资源使用情况监测脚本
 keywords: windows, 资源监测
 ---

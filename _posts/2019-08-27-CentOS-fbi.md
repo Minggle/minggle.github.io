@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Centos 系统资源使用情况监测脚本
-categories: CentOS
+categories: Shell
 description: Centos 系统资源使用情况监测脚本
 keywords: centos, 资源监测
 ---
