@@ -1,175 +1,179 @@
 ---
 layout: post
-title: kali更新配置&ssh开启
+title: SeMF部署笔记
 categories: Security
-description: kali更新配置&ssh开启
-keywords: kali, update， ssh
+description: SeMF部署笔记
+keywords: Semf, 安全管理平台
 ---
 
-> kali 更新源
+## 系统初始环境
 
-# 更新源配置
+- 系统环境
+    - CentOS Linux release 7.5.1804
+- 依赖包
+    - Compatibility libraries
+    - Debugging Tools
+    - Development tools
 
-编辑更新源文件
-```shell
-vim /etc/apt/sources.list
-```
-kali 1.0更新源（以下内容贴入sources.list）
-```shell
-#中科大kali1源
-deb http://mirrors.ustc.edu.cn/kali sana main non-free contrib
-deb http://mirrors.ustc.edu.cn/kali-security/ sana/updates main contrib non-free
-deb-src http://mirrors.ustc.edu.cn/kali-security/ sana/updates main contrib non-free
-```
-```shell
-#阿里云kali1源
-deb http://mirrors.aliyun.com/kali sana main non-free contrib
-deb http://mirrors.aliyun.com/kali-security/ sana/updates main contrib non-free
-deb-src http://mirrors.aliyun.com/kali-security/ sana/updates main contrib non-free
-```
-kali 2.0更新源（以下内容贴入sources.list）
-```shell
-#中科大kali2源
-deb https://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib
-deb-src https://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib
-```
-
-# 更新
-```shell
-apt-get update && apt-get upgrade && apt-get dist-upgrade
-```
-# 启用SSH
-
-```shell
-vi /etc/ssh/sshd_config		#修改config文件内容
-	PermitRootLogin yes     #修改内容
-	PasswordAuthentication yes    #修改内容
-```
-修改完成示例：
-```shell
-root@kali:~# vi /etc/ssh/sshd_config
-# possible, but leave them commented.  Uncommented options override the
-# default value.
-
-#Port 22
-#AddressFamily any
-#ListenAddress 0.0.0.0
-#ListenAddress ::
-
-#HostKey /etc/ssh/ssh_host_rsa_key
-#HostKey /etc/ssh/ssh_host_ecdsa_key
-#HostKey /etc/ssh/ssh_host_ed25519_key
-
-# Ciphers and keying
-#RekeyLimit default none
-
-# Logging
-#SyslogFacility AUTH
-#LogLevel INFO
-
-# Authentication:
-
-#LoginGraceTime 2m
-PermitRootLogin yes
-#StrictModes yes
-#MaxAuthTries 6
-#MaxSessions 10
-
-#PubkeyAuthentication yes
-
-# Expect .ssh/authorized_keys2 to be disregarded by default in future.
-#AuthorizedKeysFile     .ssh/authorized_keys .ssh/authorized_keys2
-
-#AuthorizedPrincipalsFile none
-
-#AuthorizedKeysCommand none
-#AuthorizedKeysCommandUser nobody
-
-# For this to work you will also need host keys in /etc/ssh/ssh_known_hosts
-#HostbasedAuthentication no
-# Change to yes if you don't trust ~/.ssh/known_hosts for
-# HostbasedAuthentication
-#IgnoreUserKnownHosts no
-# Don't read the user's ~/.rhosts and ~/.shosts files
-#IgnoreRhosts yes
-
-# To disable tunneled clear text passwords, change to no here!
-PasswordAuthentication yes
-#PermitEmptyPasswords no
-
-# Change to yes to enable challenge-response passwords (beware issues with
-# some PAM modules and threads)
-ChallengeResponseAuthentication no
-
-# Kerberos options
-#KerberosAuthentication no
-#KerberosOrLocalPasswd yes
-#KerberosTicketCleanup yes
-#KerberosGetAFSToken no
-
-# GSSAPI options
-#GSSAPIAuthentication no
-#GSSAPICleanupCredentials yes
-#GSSAPIStrictAcceptorCheck yes
-#GSSAPIKeyExchange no
-
-# Set this to 'yes' to enable PAM authentication, account processing,
-# and session processing. If this is enabled, PAM authentication will
-# be allowed through the ChallengeResponseAuthentication and
-# PasswordAuthentication.  Depending on your PAM configuration,
-# PAM authentication via ChallengeResponseAuthentication may bypass
-# the setting of "PermitRootLogin without-password".
-# If you just want the PAM account and session checks to run without
-# PAM authentication, then enable this but set PasswordAuthentication
-# and ChallengeResponseAuthentication to 'no'.
-UsePAM yes
-
-#AllowAgentForwarding yes
-#AllowTcpForwarding yes
-#GatewayPorts no
-X11Forwarding yes
-#X11DisplayOffset 10
-#X11UseLocalhost yes
-#PermitTTY yes
-PrintMotd no
-#PrintLastLog yes
-#TCPKeepAlive yes
-#UseLogin no
-#PermitUserEnvironment no
-#Compression delayed
-#ClientAliveInterval 0
-#ClientAliveCountMax 3
-#UseDNS no
-#PidFile /var/run/sshd.pid
-#MaxStartups 10:30:100
-#PermitTunnel no
-#ChrootDirectory none
-#VersionAddendum none
-
-# no default banner path
-#Banner none
-
-# Allow client to pass locale environment variables
-AcceptEnv LANG LC_*
-
-# override default of no subsystems
-Subsystem       sftp    /usr/lib/openssh/sftp-server
-
-# Example of overriding settings on a per-user basis
-#Match User anoncvs
-#       X11Forwarding no
-#       AllowTcpForwarding no
-#       PermitTTY no
-#       ForceCommand cvs server
+## 安装基础软件
 
 ```
-启动SSH服务
-```shell
-/etc/init.d/ssh start 	#启动服务
-/etc/init.d/ssh status	#查看服务状态
-
+yum -y install git tree lrzsz nmap vim wget zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel gcc make bash-completion
+yum groupinstall "Development tools"
 ```
-添加SSH自启动
-```shell
-update-rc.d ssh enable	#添加ssh开启自动启动
+### 修改hostname
+```
+hostnamectl set-hostname semf
+logout
+```
+### 部署python
+```
+cd /usr/local/src/ && wget https://www.python.org/ftp/python/3.6.5/Python-3.6.5.tar.xz
+tar -xvJf Python-3.6.5.tar.xz
+cd Python-3.6.5/
+./configure prefix=/usr/local/python3
+make && make install
+ln -s /usr/local/python3/bin/python3 /usr/bin/python3
+```
+### 部署erlang
+```
+cd /usr/local/src/ && wget http://www.rabbitmq.com/releases/erlang/erlang-19.0.4-1.el7.centos.x86_64.rpm
+rpm -ivh erlang-19.0.4-1.el7.centos.x86_64.rpm
+yum -y install erlang
+erl -version
+```
+### 部署rabbitmq
+```
+cd /usr/local/src/ && wget http://www.rabbitmq.com/releases/rabbitmq-server/v3.6.9/rabbitmq-server-3.6.9-1.el7.noarch.rpm
+yum install rabbitmq-server-3.6.9-1.el7.noarch.rpm -y
+```
+### 启动服务
+```
+systemctl start rabbitmq-server#启动rabbitmq服务
+rabbitmq-plugins enable rabbitmq_management#开启WEB端
+rabbitmqctl add_user <user> <password>#添加用户
+rabbitmqctl add_vhost semf#添加vhost
+rabbitmqctl set_user_tags <user> administrator#设置权限
+rabbitmqctl set_permissions -p semf root ".*" ".*" ".*"#正则全部权限
+```
+### 防火墙设置
+```
+firewall-cmd --zone=public --add-port=5672/tcp --permanent#开启rabbitmq api端口
+firewall-cmd --zone=public --add-port=15672/tcp --permanent#开启rabbitmq web端口
+firewall-cmd --zone=public --add-port=8000/tcp --permanent#开启8000端口
+firewall-cmd --zone=public --add-port=80/tcp --permanent#开启80端口
+firewall-cmd --reload#刷新防火墙规则
+firewall-cmd --zone=public --list-port#查看所有开放端口
+```
+## 安装应用
+### 克隆项目
+```
+cd /opt/ && git clone https://gitee.com/gy071089/SecurityManageFramwork.git
+```
+### 修改配置文件
+```
+cd /opt/SecurityManageFramwork/SeMF && vim settings.py
+#设置网站根地址
+WEB_URL = 'http://x.x.x.x:8000'
+#设置邮箱
+#设置邮箱
+EMAIL_HOST = 'smtp.163.com'          #SMTP地址
+EMAIL_PORT = 25                 #SMTP端口
+EMAIL_HOST_USER = 'xxxxxxxx@163.com'    #我自己的邮箱
+EMAIL_HOST_PASSWORD = 'xxxxxxxx'         #我的邮箱密码
+EMAIL_SUBJECT_PREFIX = u'[SeMF]'      #为邮件Subject-line前缀,默认是'[django]'
+EMAIL_USE_TLS = True               #与SMTP服务器通信时，是否启动TLS链接(安全链接)。默认是false
+#管理员站点
+SERVER_EMAIL = 'xxxxxxxx@163.com'
+DEFAULT_FROM_EMAIL = '安全管控平台xxxxxxxx@163.com>'
+#设置队列存储
+BROKER_URL = 'amqp://root:toor@semf/semf'    #设置与rabbitmq一致
+CELERY_ACCEPT_CONTENT = ['pickle', 'json', 'msgpack', 'yaml']
+```
+### 初始化安装配置
+```
+python3 -m pip install -r requirements.txt#安装python库
+python3 manage.py makemigrations#生成数据表
+python3 manage.py migrate
+python3 manage.py createsuperuser#创建超级管理员
+Username (leave blank to use 'root'):
+Email address: xxx@xxx.cn
+Password: 
+Password (again): 
+Superuser created successfully.
+```
+### 数据库初始化
+```
+python3 cnvd_xml.py #初始化数据库，主要生成角色，权限等信息
+python3 initdata.py #用于同步cnvd漏洞数据文件，文件位于cnvd_xml目录下，可自行调整，该文件夹每周更新一次，
+```
+### 创建异步任务脚本
+```
+cat >>celery.sh<<EOF
+python3 -m celery -A SeMF worker -l info --autoscale=10,4 >> /opt/SeMF/SecurityManageFramwork/logs/crlery.log 2>&1 &
+echo 'Start celery for semf'
+EOF
+chmod u+x celery.sh 
+sudo sh celery.sh #执行异步任务
+ps -ef | grep celery
+ps -ef | grep celery | grep -v grep | awk '{print $2}' | xargs kill -9
+ps -ef | grep celery
+python3 manage.py runserver 0.0.0.0:8000#测试服务是否正常
+```
+### 创建启动服务脚本
+```
+cat >>runsemf.sh<<EOF
+python3 /opt/SeMF/SecurityManageFramwork/manage.py runserver 0.0.0.0:8000 >> /opt/SeMF/SecurityManageFramwork/logs/semflog.log 2>&1 &
+echo 'Start SEMF'
+EOF
+chmod u+x runsemf.sh 
+sudo sh celery.sh 
+```
+### 优化supervisor守护进程
+```
+yum install epel-release
+yum install -y supervisor
+echo \"files = /opt/SeMF/SecurityManageFramwork/conf/*.conf\" >> /etc/supervisord.conf
+mkdir /opt/SeMF/SecurityManageFramwork/conf
+touch /opt/SeMF/SecurityManageFramwork/conf/celery.conf
+touch /opt/SeMF/SecurityManageFramwork/conf/semf.conf
+```
+```
+cat >>conf/semf.conf<<EOF
+[program:celery]
+command=python3 -m celery -A SeMF worker -l info --autoscale=10,4     ; supervisor启动命令
+directory=/opt/SeMF/SecurityManageFramwork/                                                 ; 项目的文件夹路径
+startsecs=10                                                                       ; 启动时间
+stopwaitsecs=60                                                                          ; 终止等待时间
+autostart=true                                                                         ; 是否自动启动
+autorestart=true                                                                       ; 是否自动重启
+stopasgroup=true
+stdout_logfile=/opt/SeMF/SecurityManageFramwork/logs/celerylog.log                           ; log 日志
+stderr_logfile=/opt/SeMF/SecurityManageFramwork/logs/celerylog.err                           ; 错误日志
+EOF
+```
+```
+cat >>runsemf.sh<<EOF
+[program:semf]
+command=python3 manage.py runserver 0.0.0.0:8000     ; supervisor启动命令
+directory=/opt/SeMF/SecurityManageFramwork/                                                 ; 项目的文件夹路径
+startsecs=10                                                                       ; 启动时间
+stopwaitsecs=60                                                                          ; 终止等待时间
+autostart=true                                                                         ; 是否自动启动
+autorestart=true                                                                       ; 是否自动重启
+stdout_logfile=/opt/SeMF/SecurityManageFramwork/logs/semflog.log                           ; log 日志
+stderr_logfile=/opt/SeMF/SecurityManageFramwork/logs/semflog.err                           ; 错误日志
+EOF
+```
+```
+supervisord -c /etc/supervisord.conf
+supervisorctl reload
+supervisorctl start all
+```
+### 外部地址访问
+```
+http://xxxx:8000
+http://xxxx.8000/semf#管理页面"
+# 备注
+[SeMF开源项目by残源](https://gitee.com/gy071089/SecurityManageFramwork "SeMF开源项目by残源")
 ```

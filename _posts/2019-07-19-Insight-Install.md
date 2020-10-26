@@ -7,173 +7,99 @@ keywords: Insight, 安全管理平台
 ---
 
 ## 系统初始环境
-
 - 系统环境
     - CentOS Linux release 7.5.1804
 - 依赖包
     - Compatibility libraries
     - Debugging Tools
     - Development tools
-
-## 安装基础软件
-
+### 安装基础软件
 ```
-yum -y install git tree lrzsz nmap vim wget zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel gcc make bash-completion
-yum groupinstall "Development tools"
+yum -y install bash-completion git tree lrzsz nmap vim wget sysstat net-tools
+yum -y groupinstall 'development tools'
 ```
-### 修改hostname
+### 初始化配置
+#### 修改主机名
 ```
-hostnamectl set-hostname semf
-logout
+hostnamectl set-hostname insight
 ```
-### 部署python
+#### 修改防火墙规则
 ```
-cd /usr/local/src/ && wget https://www.python.org/ftp/python/3.6.5/Python-3.6.5.tar.xz
-tar -xvJf Python-3.6.5.tar.xz
-cd Python-3.6.5/
-./configure prefix=/usr/local/python3
-make && make install
-ln -s /usr/local/python3/bin/python3 /usr/bin/python3
+firewall-cmd --zone=public --add-port=6606/tcp --permanent
+firewall-cmd --zone=public --add-port=5000/tcp --permanent
+firewall-cmd --zone=public --add-port=9000/tcp --permanent
+firewall-cmd --zone=public --add-port=3306/tcp --permanent
+firewall-cmd --reload
+firewall-cmd --zone=public list
 ```
-### 部署erlang
+## 环境部署
+### 安装python环境
 ```
-cd /usr/local/src/ && wget http://www.rabbitmq.com/releases/erlang/erlang-19.0.4-1.el7.centos.x86_64.rpm
-rpm -ivh erlang-19.0.4-1.el7.centos.x86_64.rpm
-yum -y install erlang
-erl -version
+yum -y install python
+yum -y install epel-release
+yum -y install python-pip"
 ```
-### 部署rabbitmq
+### 安装docker
 ```
-cd /usr/local/src/ && wget http://www.rabbitmq.com/releases/rabbitmq-server/v3.6.9/rabbitmq-server-3.6.9-1.el7.noarch.rpm
-yum install rabbitmq-server-3.6.9-1.el7.noarch.rpm -y
+yum -y install docker
+docker --version
 ```
-### 启动服务
+### 启动docker并设置开机自启动
 ```
-systemctl start rabbitmq-server#启动rabbitmq服务
-rabbitmq-plugins enable rabbitmq_management#开启WEB端
-rabbitmqctl add_user <user> <password>#添加用户
-rabbitmqctl add_vhost semf#添加vhost
-rabbitmqctl set_user_tags <user> administrator#设置权限
-rabbitmqctl set_permissions -p semf root ".*" ".*" ".*"#正则全部权限
+systemctl enable docker
+systemctl start docker
 ```
-### 防火墙设置
+### 获取MYSQLdocker
 ```
-firewall-cmd --zone=public --add-port=5672/tcp --permanent#开启rabbitmq api端口
-firewall-cmd --zone=public --add-port=15672/tcp --permanent#开启rabbitmq web端口
-firewall-cmd --zone=public --add-port=8000/tcp --permanent#开启8000端口
-firewall-cmd --zone=public --add-port=80/tcp --permanent#开启80端口
-firewall-cmd --reload#刷新防火墙规则
-firewall-cmd --zone=public --list-port#查看所有开放端口
+docker pull mysql:5.7.13
 ```
-## 安装应用
 ### 克隆项目
 ```
-cd /opt/ && git clone https://gitee.com/gy071089/SecurityManageFramwork.git
+cd /opt/ && git clone https://github.com/creditease-sec/insight.git
 ```
-### 修改配置文件
+### 安装依赖库
 ```
-cd /opt/SecurityManageFramwork/SeMF && vim settings.py
-#设置网站根地址
-WEB_URL = 'http://x.x.x.x:8000'
-#设置邮箱
-#设置邮箱
-EMAIL_HOST = 'smtp.163.com'          #SMTP地址
-EMAIL_PORT = 25                 #SMTP端口
-EMAIL_HOST_USER = 'xxxxxxxx@163.com'    #我自己的邮箱
-EMAIL_HOST_PASSWORD = 'xxxxxxxx'         #我的邮箱密码
-EMAIL_SUBJECT_PREFIX = u'[SeMF]'      #为邮件Subject-line前缀,默认是'[django]'
-EMAIL_USE_TLS = True               #与SMTP服务器通信时，是否启动TLS链接(安全链接)。默认是false
-#管理员站点
-SERVER_EMAIL = 'xxxxxxxx@163.com'
-DEFAULT_FROM_EMAIL = '安全管控平台xxxxxxxx@163.com>'
-#设置队列存储
-BROKER_URL = 'amqp://root:toor@semf/semf'    #设置与rabbitmq一致
-CELERY_ACCEPT_CONTENT = ['pickle', 'json', 'msgpack', 'yaml']
+yum -y install mariadb-libs.x86_64 mariadb.x86_64 libmysql mysql-devel gcc python-devel libevent-devel openldap-devel
 ```
-### 初始化安装配置
+### 安装依赖文件
 ```
-python3 -m pip install -r requirements.txt#安装python库
-python3 manage.py makemigrations#生成数据表
-python3 manage.py migrate
-python3 manage.py createsuperuser#创建超级管理员
-Username (leave blank to use 'root'):
-Email address: xxx@xxx.cn
-Password: 
-Password (again): 
-Superuser created successfully.
+cd /opt/insight && pip install -r srcpm/requirement.txt --user
 ```
-### 数据库初始化
+### docker启动mysql
 ```
-python3 cnvd_xml.py #初始化数据库，主要生成角色，权限等信息
-python3 initdata.py #用于同步cnvd漏洞数据文件，文件位于cnvd_xml目录下，可自行调整，该文件夹每周更新一次，
+docker run -d -p 127.0.0.1:6606:3306 --name open_source_mysqldb -e MYSQL_ROOT_PASSWORD=root mysql:5.7.13
 ```
-### 创建异步任务脚本
+### 创建数据表
 ```
-cat >>celery.sh<<EOF
-python3 -m celery -A SeMF worker -l info --autoscale=10,4 >> /opt/SeMF/SecurityManageFramwork/logs/crlery.log 2>&1 &
-echo 'Start celery for semf'
-EOF
-chmod u+x celery.sh 
-sudo sh celery.sh #执行异步任务
-ps -ef | grep celery
-ps -ef | grep celery | grep -v grep | awk '{print $2}' | xargs kill -9
-ps -ef | grep celery
-python3 manage.py runserver 0.0.0.0:8000#测试服务是否正常
+mysql -h 127.0.0.1 -P 6606 -u root -p
+Enter password:root
+mysql> CREATE DATABASE IF NOT EXISTS vuldb DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
+mysql> grant all on vuldb.* to vuluser@'%' identified by 'vulpassword';
+mysql> flush privileges;
+mysql> quit
 ```
-### 创建启动服务脚本
+### 导入数据库文件
 ```
-cat >>runsemf.sh<<EOF
-python3 /opt/SeMF/SecurityManageFramwork/manage.py runserver 0.0.0.0:8000 >> /opt/SeMF/SecurityManageFramwork/logs/semflog.log 2>&1 &
-echo 'Start SEMF'
-EOF
-chmod u+x runsemf.sh 
-sudo sh celery.sh 
+mysql -h127.0.0.1 -P6606 -uroot -p vuldb < srcpm/vuldb_init.sql
 ```
-### 优化supervisor守护进程
+### 添加本地环境变量
 ```
-yum install epel-release
-yum install -y supervisor
-echo \"files = /opt/SeMF/SecurityManageFramwork/conf/*.conf\" >> /etc/supervisord.conf
-mkdir /opt/SeMF/SecurityManageFramwork/conf
-touch /opt/SeMF/SecurityManageFramwork/conf/celery.conf
-touch /opt/SeMF/SecurityManageFramwork/conf/semf.conf
+export DEV_DATABASE_URL=mysql://vuluser:vulpassword@127.0.0.1:6606/vuldb
 ```
+### 启动应用
 ```
-cat >>conf/semf.conf<<EOF
-[program:celery]
-command=python3 -m celery -A SeMF worker -l info --autoscale=10,4     ; supervisor启动命令
-directory=/opt/SeMF/SecurityManageFramwork/                                                 ; 项目的文件夹路径
-startsecs=10                                                                       ; 启动时间
-stopwaitsecs=60                                                                          ; 终止等待时间
-autostart=true                                                                         ; 是否自动启动
-autorestart=true                                                                       ; 是否自动重启
-stopasgroup=true
-stdout_logfile=/opt/SeMF/SecurityManageFramwork/logs/celerylog.log                           ; log 日志
-stderr_logfile=/opt/SeMF/SecurityManageFramwork/logs/celerylog.err                           ; 错误日志
-EOF
+python manage.py runserver -h 0.0.0.0 \
+--link open_source_mysqldb:db \
+--name open_source_srcpm \
+-v $PWD/srcpm:/opt/webapp/srcpm \
+-e DEV_DATABASE_URL='mysql://vuluser:vulpassword@db/vuldb' \
+-e SrcPM_CONFIG=development \
+-e MAIL_PASSWORD='password' \
+daocloud.io/liusheng/vulpm_docker:latest \
+sh -c 'supervisord -c srcpm/supervisor.conf && supervisorctl -c srcpm/supervisor.conf start all && tail -f srcpm/log/gunicorn.err && tail -f srcpm/log/mail_sender.err'
 ```
-```
-cat >>runsemf.sh<<EOF
-[program:semf]
-command=python3 manage.py runserver 0.0.0.0:8000     ; supervisor启动命令
-directory=/opt/SeMF/SecurityManageFramwork/                                                 ; 项目的文件夹路径
-startsecs=10                                                                       ; 启动时间
-stopwaitsecs=60                                                                          ; 终止等待时间
-autostart=true                                                                         ; 是否自动启动
-autorestart=true                                                                       ; 是否自动重启
-stdout_logfile=/opt/SeMF/SecurityManageFramwork/logs/semflog.log                           ; log 日志
-stderr_logfile=/opt/SeMF/SecurityManageFramwork/logs/semflog.err                           ; 错误日志
-EOF
-```
-```
-supervisord -c /etc/supervisord.conf
-supervisorctl reload
-supervisorctl start all
-```
-### 外部地址访问
-```
-http://xxxx:8000
-http://xxxx.8000/semf#管理页面"
+## 登录主页
+http://xxxx:5000/srcpm/
+
 # 备注
-[SeMF开源项目by残源](https://gitee.com/gy071089/SecurityManageFramwork "SeMF开源项目by残源")
-```
+[Insight开源项目by宜信](https://github.com/creditease-sec/insight "Insight开源项目by宜信")
