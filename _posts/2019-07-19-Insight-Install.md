@@ -1,21 +1,22 @@
 ---
 layout: post
-title: SeMF部署笔记
+title: linux系统部署Insight
 categories: Sceurity
-description: SeMF部署笔记
-keywords: Semf, 安全管理平台
+description: Insight部署笔记
+keywords: Insight, 安全管理平台
 ---
 
-
-
 ## 系统初始环境
+
 - 系统环境
     - CentOS Linux release 7.5.1804
 - 依赖包
     - Compatibility libraries
     - Debugging Tools
     - Development tools
+
 ## 安装基础软件
+
 ```
 yum -y install git tree lrzsz nmap vim wget zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel gcc make bash-completion
 yum groupinstall "Development tools"

@@ -1,15 +1,11 @@
 ---
 layout: post
-title: linux系统部署Insight
+title: SeMF部署笔记
 categories: Sceurity
-description: Insight部署笔记
-keywords: Insight, 安全管理平台
+description: SeMF部署笔记
+keywords: Semf, 安全管理平台
+
 ---
-
-
-
-
-
 
 ## 系统初始环境
 
