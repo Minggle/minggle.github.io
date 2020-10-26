@@ -1,10 +1,9 @@
 ---
 layout: post
 title: SeMF部署笔记
-categories: Sceurity
+categories: Security
 description: SeMF部署笔记
 keywords: Semf, 安全管理平台
-
 ---
 
 ## 系统初始环境
