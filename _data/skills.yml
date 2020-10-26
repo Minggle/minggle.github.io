@@ -1,19 +1,18 @@
-- name: Software Engineer Keywords
+- name: Fun Keywords
   keywords:
-      - Java
-      - C++
-      - Python
-      - Design Patterns
+      - 钓鱼
+      - 抽水
 
-- name: Mobile Developer Keywords
-  keywords:
-      - Android
-      - Reverse Engineering
 
-- name: Windows Developer Keywords
-  keywords:
-      - Win32 SDK
-      - DuiLib
-      - WTL
-      - COM
-      - WinDbg
+#- name: Mobile Developer Keywords
+#  keywords:
+#      - Android
+#      - Reverse Engineering
+#
+#- name: Windows Developer Keywords
+#  keywords:
+#      - Win32 SDK
+#      - DuiLib
+#      - WTL
+#      - COM
+#      - WinDbg
