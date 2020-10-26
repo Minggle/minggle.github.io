@@ -6,14 +6,10 @@ description: CentOS 7 本地YUM仓库搭建
 keywords: centos, yum
 ---
 
-# 本地YUM仓库搭建
-| 序号 | 修改人  | 版本 | 时间      | 备注 |
-| ---- | ------- | ---- | --------- | ---- |
-| 1.   | Minggle | v1.0 | 2019.6.28 | 新建 |
-
 # 一、Server端配置
 
 ## 0x00 设置基础配置
+
 ```
 # 设置主机名
 hostnamectl set-hostname yum
