@@ -1,7 +1,7 @@
 ---
 layout: post
 title: linux系统部署Insight
-categories: Sceurity
+categories: Security
 description: Insight部署笔记
 keywords: Insight, 安全管理平台
 ---
