@@ -1,112 +1,175 @@
 ---
 layout: post
-title: SeMF部署笔记
+title: kali更新配置&ssh开启
 categories: Security
-description: SeMF部署笔记
-keywords: Semf, 安全管理平台
+description: kali更新配置&ssh开启
+keywords: kali, update， ssh
 ---
 
-## 系统初始环境
+> kali 更新源
 
-- 系统环境
-    - CentOS Linux release 7.5.1804
-- 依赖包
-    - Compatibility libraries
-    - Debugging Tools
-    - Development tools
+# 更新源配置
 
-![](http://cdn.mingsec.com/安全管理体系.png)
+编辑更新源文件
+```shell
+vim /etc/apt/sources.list
+```
+kali 1.0更新源（以下内容贴入sources.list）
+```shell
+#中科大kali1源
+deb http://mirrors.ustc.edu.cn/kali sana main non-free contrib
+deb http://mirrors.ustc.edu.cn/kali-security/ sana/updates main contrib non-free
+deb-src http://mirrors.ustc.edu.cn/kali-security/ sana/updates main contrib non-free
+```
+```shell
+#阿里云kali1源
+deb http://mirrors.aliyun.com/kali sana main non-free contrib
+deb http://mirrors.aliyun.com/kali-security/ sana/updates main contrib non-free
+deb-src http://mirrors.aliyun.com/kali-security/ sana/updates main contrib non-free
+```
+kali 2.0更新源（以下内容贴入sources.list）
+```shell
+#中科大kali2源
+deb https://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib
+deb-src https://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib
+```
 
+# 更新
+```shell
+apt-get update && apt-get upgrade && apt-get dist-upgrade
+```
+# 启用SSH
 
+```shell
+vi /etc/ssh/sshd_config		#修改config文件内容
+	PermitRootLogin yes     #修改内容
+	PasswordAuthentication yes    #修改内容
+```
+修改完成示例：
+```shell
+root@kali:~# vi /etc/ssh/sshd_config
+# possible, but leave them commented.  Uncommented options override the
+# default value.
 
-### 安装基础软件
+#Port 22
+#AddressFamily any
+#ListenAddress 0.0.0.0
+#ListenAddress ::
+
+#HostKey /etc/ssh/ssh_host_rsa_key
+#HostKey /etc/ssh/ssh_host_ecdsa_key
+#HostKey /etc/ssh/ssh_host_ed25519_key
+
+# Ciphers and keying
+#RekeyLimit default none
+
+# Logging
+#SyslogFacility AUTH
+#LogLevel INFO
+
+# Authentication:
+
+#LoginGraceTime 2m
+PermitRootLogin yes
+#StrictModes yes
+#MaxAuthTries 6
+#MaxSessions 10
+
+#PubkeyAuthentication yes
+
+# Expect .ssh/authorized_keys2 to be disregarded by default in future.
+#AuthorizedKeysFile     .ssh/authorized_keys .ssh/authorized_keys2
+
+#AuthorizedPrincipalsFile none
+
+#AuthorizedKeysCommand none
+#AuthorizedKeysCommandUser nobody
+
+# For this to work you will also need host keys in /etc/ssh/ssh_known_hosts
+#HostbasedAuthentication no
+# Change to yes if you don't trust ~/.ssh/known_hosts for
+# HostbasedAuthentication
+#IgnoreUserKnownHosts no
+# Don't read the user's ~/.rhosts and ~/.shosts files
+#IgnoreRhosts yes
+
+# To disable tunneled clear text passwords, change to no here!
+PasswordAuthentication yes
+#PermitEmptyPasswords no
+
+# Change to yes to enable challenge-response passwords (beware issues with
+# some PAM modules and threads)
+ChallengeResponseAuthentication no
+
+# Kerberos options
+#KerberosAuthentication no
+#KerberosOrLocalPasswd yes
+#KerberosTicketCleanup yes
+#KerberosGetAFSToken no
+
+# GSSAPI options
+#GSSAPIAuthentication no
+#GSSAPICleanupCredentials yes
+#GSSAPIStrictAcceptorCheck yes
+#GSSAPIKeyExchange no
+
+# Set this to 'yes' to enable PAM authentication, account processing,
+# and session processing. If this is enabled, PAM authentication will
+# be allowed through the ChallengeResponseAuthentication and
+# PasswordAuthentication.  Depending on your PAM configuration,
+# PAM authentication via ChallengeResponseAuthentication may bypass
+# the setting of "PermitRootLogin without-password".
+# If you just want the PAM account and session checks to run without
+# PAM authentication, then enable this but set PasswordAuthentication
+# and ChallengeResponseAuthentication to 'no'.
+UsePAM yes
+
+#AllowAgentForwarding yes
+#AllowTcpForwarding yes
+#GatewayPorts no
+X11Forwarding yes
+#X11DisplayOffset 10
+#X11UseLocalhost yes
+#PermitTTY yes
+PrintMotd no
+#PrintLastLog yes
+#TCPKeepAlive yes
+#UseLogin no
+#PermitUserEnvironment no
+#Compression delayed
+#ClientAliveInterval 0
+#ClientAliveCountMax 3
+#UseDNS no
+#PidFile /var/run/sshd.pid
+#MaxStartups 10:30:100
+#PermitTunnel no
+#ChrootDirectory none
+#VersionAddendum none
+
+# no default banner path
+#Banner none
+
+# Allow client to pass locale environment variables
+AcceptEnv LANG LC_*
+
+# override default of no subsystems
+Subsystem       sftp    /usr/lib/openssh/sftp-server
+
+# Example of overriding settings on a per-user basis
+#Match User anoncvs
+#       X11Forwarding no
+#       AllowTcpForwarding no
+#       PermitTTY no
+#       ForceCommand cvs server
 
 ```
-yum -y install bash-completion git tree lrzsz nmap vim wget sysstat net-tools
-yum -y groupinstall 'development tools'
-```
-### 初始化配置
-#### 修改主机名
-```
-hostnamectl set-hostname insight
-```
-#### 修改防火墙规则
-```
-firewall-cmd --zone=public --add-port=6606/tcp --permanent
-firewall-cmd --zone=public --add-port=5000/tcp --permanent
-firewall-cmd --zone=public --add-port=9000/tcp --permanent
-firewall-cmd --zone=public --add-port=3306/tcp --permanent
-firewall-cmd --reload
-firewall-cmd --zone=public list
-```
-## 环境部署
-### 安装python环境
-```
-yum -y install python
-yum -y install epel-release
-yum -y install python-pip"
-```
-### 安装docker
-```
-yum -y install docker
-docker --version
-```
-### 启动docker并设置开机自启动
-```
-systemctl enable docker
-systemctl start docker
-```
-### 获取MYSQLdocker
-```
-docker pull mysql:5.7.13
-```
-### 克隆项目
-```
-cd /opt/ && git clone https://github.com/creditease-sec/insight.git
-```
-### 安装依赖库
-```
-yum -y install mariadb-libs.x86_64 mariadb.x86_64 libmysql mysql-devel gcc python-devel libevent-devel openldap-devel
-```
-### 安装依赖文件
-```
-cd /opt/insight && pip install -r srcpm/requirement.txt --user
-```
-### docker启动mysql
-```
-docker run -d -p 127.0.0.1:6606:3306 --name open_source_mysqldb -e MYSQL_ROOT_PASSWORD=root mysql:5.7.13
-```
-### 创建数据表
-```
-mysql -h 127.0.0.1 -P 6606 -u root -p
-Enter password:root
-mysql> CREATE DATABASE IF NOT EXISTS vuldb DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
-mysql> grant all on vuldb.* to vuluser@'%' identified by 'vulpassword';
-mysql> flush privileges;
-mysql> quit
-```
-### 导入数据库文件
-```
-mysql -h127.0.0.1 -P6606 -uroot -p vuldb < srcpm/vuldb_init.sql
-```
-### 添加本地环境变量
-```
-export DEV_DATABASE_URL=mysql://vuluser:vulpassword@127.0.0.1:6606/vuldb
-```
-### 启动应用
-```
-python manage.py runserver -h 0.0.0.0 \
---link open_source_mysqldb:db \
---name open_source_srcpm \
--v $PWD/srcpm:/opt/webapp/srcpm \
--e DEV_DATABASE_URL='mysql://vuluser:vulpassword@db/vuldb' \
--e SrcPM_CONFIG=development \
--e MAIL_PASSWORD='password' \
-daocloud.io/liusheng/vulpm_docker:latest \
-sh -c 'supervisord -c srcpm/supervisor.conf && supervisorctl -c srcpm/supervisor.conf start all && tail -f srcpm/log/gunicorn.err && tail -f srcpm/log/mail_sender.err'
-```
-## 登录主页
-http://xxxx:5000/srcpm/
+启动SSH服务
+```shell
+/etc/init.d/ssh start 	#启动服务
+/etc/init.d/ssh status	#查看服务状态
 
-# 备注
-[Insight开源项目by宜信](https://github.com/creditease-sec/insight "Insight开源项目by宜信")
+```
+添加SSH自启动
+```shell
+update-rc.d ssh enable	#添加ssh开启自动启动
+```
