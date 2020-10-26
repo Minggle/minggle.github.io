@@ -1,18 +1,20 @@
 ---
 layout: page
 title: About
-description: 打码改变世界
-keywords: Zhuang Ma, 马壮
+description: 抽水改变鱼塘。
+keywords: Minggle, Mingsec, 明叔
 comments: true
 menu: 关于
 permalink: /about/
 ---
 
-我是马壮，码而生，码而立。
+赚钱回村挖鱼塘；
 
-仰慕「优雅编码的艺术」。
+抽水！
 
-坚信熟能生巧，努力改变人生。
+电击！！
+
+绝对不空军！！！
 
 ## 联系
 
