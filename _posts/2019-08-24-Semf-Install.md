@@ -9,7 +9,7 @@ keywords: Insight, 安全管理平台
 
 
 
-![](http://cdn.mingsec.com/安全管理体系.png)
+
 
 ## 系统初始环境
 
@@ -19,7 +19,13 @@ keywords: Insight, 安全管理平台
     - Compatibility libraries
     - Debugging Tools
     - Development tools
+
+![](http://cdn.mingsec.com/安全管理体系.png)
+
+
+
 ### 安装基础软件
+
 ```
 yum -y install bash-completion git tree lrzsz nmap vim wget sysstat net-tools
 yum -y groupinstall 'development tools'
