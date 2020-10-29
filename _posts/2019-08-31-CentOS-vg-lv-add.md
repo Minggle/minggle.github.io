@@ -156,7 +156,7 @@ Syncing disks.
 ```
 # 0x05 创建LV
 ```shell
-[root@localhost ~]# lvcreate -L 299G -n data VG_data
+[root@localhost ~]# lvcreate -l 100%VG -n data VG_data
   Logical volume "data" created.
 [root@localhost ~]# vgdisplay VG_data 
   --- Volume group ---
