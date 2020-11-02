@@ -1,3 +1,11 @@
+---
+layout: post
+title: Nessus 8.12.0 安装破解
+categories: Security
+description: Nessus 8.12.0 安装破解
+keywords: nessus
+---
+
 # Nessus 8.12.0 安装破解
 
 ## 1. 下载Nessus
