@@ -104,8 +104,9 @@ pip install pyOpenSSL pymysql pycurl
 
 ### 2.3 脚本文件
 
--   `/usr/local/src/python/ssl_writer.py`
 
+-   脚本路径：`/usr/local/src/python/ssl_writer.py`
+-   证书路径：`/usr/local/src/ssl/`
 ```python
 #!/use/bin/python
 # -*- coding:utf-8 -*-
