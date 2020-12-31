@@ -7,7 +7,10 @@ keywords: centos, Proxychain
 ---
 
 > 由于种种原因，很多命令下载速度很慢而且不稳定，所以使用proxychains进行代理，代理服务器自备。
+
+
 ## CentOS7 安装 ProxyChains-NG
+
 1. 从GitHub下载源码
 ```shell
 cd /usr/local/src/
