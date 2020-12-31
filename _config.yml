@@ -2,7 +2,7 @@
 #   Main Configs   #
 # ---------------- #
 baseurl:
-url: https://github.mingsec.com
+url: https://mingsec.com
 date_format: "ordinal"
 title: Minggle'Blog
 subtitle: "赚钱回村挖鱼塘"
