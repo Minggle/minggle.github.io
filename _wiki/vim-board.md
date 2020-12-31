@@ -6,4 +6,4 @@ description: vim 键盘图
 keywords: vim, vi
 ---
 
-![](http://cdn.mingsec.com/vi-vim键盘图.gif)
+![](https://raw.githubusercontent.com/Minggle/image/main/image/vi-vim键盘图.gif)

@@ -20,7 +20,7 @@ Swap:          8063           0        8063
 
 ```
 
-![](http://cdn.mingsec.com/image-20200828172311371.png)
+![](https://raw.githubusercontent.com/Minggle/image/main/image/image-20200828172311371.png)
 
 ### 1.1 设置DNS
 
@@ -29,7 +29,7 @@ Swap:          8063           0        8063
 [root@bigops ~]# echo "192.168.16.131 work.bigops.com" >> /etc/hosts
 ```
 
-![](http://cdn.mingsec.com/image-20200828172425636.png)
+![](https://raw.githubusercontent.com/Minggle/image/main/image/image-20200828172425636.png)
 
 ### 1.2 初始化环境
 
@@ -41,7 +41,7 @@ Swap:          8063           0        8063
 [root@bigops ~]# bash centos_init_env.sh
 ```
 
-![](http://cdn.mingsec.com/image-20200828172558091.png)
+![](https://raw.githubusercontent.com/Minggle/image/main/image/image-20200828172558091.png)
 
 ### 1.3 关闭IPv6
 
@@ -51,27 +51,27 @@ Swap:          8063           0        8063
 [root@bigops ~]# echo "net.ipv6.conf.default.disable_ipv6 = 1" >>/etc/sysctl.conf
 ```
 
-![](http://cdn.mingsec.com/image-20200828172701651.png)
+![](https://raw.githubusercontent.com/Minggle/image/main/image/image-20200828172701651.png)
 
 ```shell
 [root@bigops ~]# cp /etc/sysconfig/network /etc/sysconfig/network.backup
 [root@bigops ~]# echo "NETWORKING_IPV6=no" >>/etc/sysconfig/network
 ```
 
-![](http://cdn.mingsec.com/image-20200828172756046.png)
+![](https://raw.githubusercontent.com/Minggle/image/main/image/image-20200828172756046.png)
 
 ```shell
 [root@bigops ~]# sed s/IPV6/#IPV6/g /etc/sysconfig/network-scripts/ifcfg-e* -i
 [root@bigops ~]# echo "IPV6INIT=no" >> /etc/sysconfig/network-scripts/ifcfg-e*
 ```
 
-![](http://cdn.mingsec.com/image-20200828172802245.png)
+![](https://raw.githubusercontent.com/Minggle/image/main/image/image-20200828172802245.png)
 
 ```shell
 [root@bigops ~]# systemctl disable NetworkManager
 ```
 
-![](http://cdn.mingsec.com/image-20200828172808302.png)
+![](https://raw.githubusercontent.com/Minggle/image/main/image/image-20200828172808302.png)
 
 ## 2. 安装Mysql
 
@@ -239,7 +239,7 @@ mysql> flush privileges;
 [root@bigops ~]# systemctl status mysqld –l
 ```
 
-![](http://cdn.mingsec.com/image-20200830191208290.png)
+![](https://raw.githubusercontent.com/Minggle/image/main/image/image-20200830191208290.png)
 
 ## 3. 安装ELK
 
@@ -251,9 +251,9 @@ mysql> flush privileges;
 [root@bigops ~]# bash elk762.sh
 ```
 
-![](http://cdn.mingsec.com/image-20200830191455026.png)
+![](https://raw.githubusercontent.com/Minggle/image/main/image/image-20200830191455026.png)
 
-![](http://cdn.mingsec.com/image-20200830191502003.png)
+![](https://raw.githubusercontent.com/Minggle/image/main/image/image-20200830191502003.png)
 
 elk762.sh脚本如下：
 
@@ -530,7 +530,7 @@ echo
 [root@bigops ~]# netstat -nptl|grep 9[2,3]00
 ```
 
-![](http://cdn.mingsec.com/image-20200830191522530.png)
+![](https://raw.githubusercontent.com/Minggle/image/main/image/image-20200830191522530.png)
 
 ### 3.3 修改密码
 
@@ -538,7 +538,7 @@ echo
 [root@bigops ~]# /opt/es/bin/elasticsearch-setup-passwords interactive
 ```
 
-![](http://cdn.mingsec.com/image-20200830191541587.png)
+![](https://raw.githubusercontent.com/Minggle/image/main/image/image-20200830191541587.png)
 
 ### 3.4 启动kibana
 
@@ -547,7 +547,7 @@ echo
 [root@bigops ~]# netstat -nplt|grep 5601
 ```
 
-![](http://cdn.mingsec.com/image-20200830191603529.png)
+![](https://raw.githubusercontent.com/Minggle/image/main/image/image-20200830191603529.png)
 
 - 登录网页查看是否正常
   - <-http://192.168.16.131:5601>
@@ -561,7 +561,7 @@ echo
 [root@bigops ~]# netstat -npl|grep 6514
 ```
 
-![](http://cdn.mingsec.com/image-20200830191816412.png)
+![](https://raw.githubusercontent.com/Minggle/image/main/image/image-20200830191816412.png)
 
 ### 3.6 启动cerebro
 
@@ -571,7 +571,7 @@ echo
 [root@bigops ~]# bash cerebro.sh
 ```
 
-![](http://cdn.mingsec.com/image-20200830191835781.png)
+![](https://raw.githubusercontent.com/Minggle/image/main/image/image-20200830191835781.png)
 
 cerebro.sh脚本如下
 ```shell
@@ -644,7 +644,7 @@ echo
 [root@bigops ~]# netstat -nptl|grep 9000
 ```
 
-![](http://cdn.mingsec.com/image-20200830191855162.png)
+![](https://raw.githubusercontent.com/Minggle/image/main/image/image-20200830191855162.png)
 
 - 登录网页查看是否正常
   - <http://192.168.16.131:9000>
@@ -657,7 +657,7 @@ echo
 
 上传安装包到/opt目录
 
-![](http://cdn.mingsec.com/image-20200830192404728.png)
+![](https://raw.githubusercontent.com/Minggle/image/main/image/image-20200830192404728.png)
 
 ### 4.2 解压缩
 
@@ -672,15 +672,15 @@ echo
 [root@bigops bigops-3.0.7-install]# bash install.sh
 ```
 
-![](http://cdn.mingsec.com/image-20200830192449622.png)
+![](https://raw.githubusercontent.com/Minggle/image/main/image/image-20200830192449622.png)
 
-![](http://cdn.mingsec.com/image-20200830191455026.png)
+![](https://raw.githubusercontent.com/Minggle/image/main/image/image-20200830191455026.png)
 
-![](http://cdn.mingsec.com/image-20200830191455026.png)
+![](https://raw.githubusercontent.com/Minggle/image/main/image/image-20200830191455026.png)
 
 
 
-![](http://cdn.mingsec.com/image-20200830191455026.png)
+![](https://raw.githubusercontent.com/Minggle/image/main/image/image-20200830191455026.png)
 
 ### 4.4 确认安装状态
 
@@ -694,7 +694,7 @@ echo
 
 ```
 
-![](http://cdn.mingsec.com/image-20200830191455026.png)
+![](https://raw.githubusercontent.com/Minggle/image/main/image/image-20200830191455026.png)
 
 #### 4.4.2 检查系统运行状态
 
@@ -704,7 +704,7 @@ CONTAINER ID        IMAGE               COMMAND             CREATED             
 8dfb2b4375c8        bigops:latest       "/root/start.sh"    About a minute ago   Up About a minute   0.0.0.0:30001->30001/tcp, 0.0.0.0:30003->30003/tcp   bigops
 ```
 
-![](http://cdn.mingsec.com/image-20200830191455026.png)
+![](https://raw.githubusercontent.com/Minggle/image/main/image/image-20200830191455026.png)
 
 #### 4.4.3 检查服务端口
 
@@ -712,7 +712,7 @@ CONTAINER ID        IMAGE               COMMAND             CREATED             
 [root@bigops bigops-3.0.7-install]# netstat -nptl|grep docker
 ```
 
-![](http://cdn.mingsec.com/image-20200830191455026.png)
+![](https://raw.githubusercontent.com/Minggle/image/main/image/image-20200830191455026.png)
 
 #### 4.4.4 检查Nginx域名是否配置正确
 
@@ -720,15 +720,15 @@ CONTAINER ID        IMAGE               COMMAND             CREATED             
 [root@bigops bigops-3.0.7-install]# cat /etc/nginx/conf.d/sso.conf
 ```
 
-![](http://cdn.mingsec.com/image-20200830193121191.png)
+![](https://raw.githubusercontent.com/Minggle/image/main/image/image-20200830193121191.png)
 
 ```shell
 [root@bigops bigops-3.0.7-install]# cat /etc/nginx/conf.d/work.conf
 ```
 
-![](http://cdn.mingsec.com/image-20200830193121191.png)
+![](https://raw.githubusercontent.com/Minggle/image/main/image/image-20200830193121191.png)
 
-![](http://cdn.mingsec.com/image-20200830193121191.png)
+![](https://raw.githubusercontent.com/Minggle/image/main/image/image-20200830193121191.png)
 
 ### 4.5 登录检查
 
@@ -747,7 +747,7 @@ CONTAINER ID        IMAGE               COMMAND             CREATED             
 
 点击桌面/日志/ES设置
 
-![](http://cdn.mingsec.com/image-20200830193121191.png)
+![](https://raw.githubusercontent.com/Minggle/image/main/image/image-20200830193121191.png)
 
 ## 5. 安装Proxy
 

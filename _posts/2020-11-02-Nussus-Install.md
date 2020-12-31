@@ -14,7 +14,7 @@ keywords: nessus
 
 我的环境是CentOS 7.6 x64，所以下载的是Nessus-8.12.0-es7.x86_64.rpm。
 
-![image-20201029142706482](http://cdn.mingsec.com/image-20201029142706482.png)
+![image-20201029142706482](https://raw.githubusercontent.com/Minggle/image/main/image/image-20201029142706482.png)
 
 ## 2. 安装
 
@@ -82,17 +82,17 @@ tcp6       0      0 :::8834                 :::*                    LISTEN      
 
 https://[nessus ip]:8834
 
-![image-20201029143847614](http://cdn.mingsec.com/image-20201029143847614.png)
+![image-20201029143847614](https://raw.githubusercontent.com/Minggle/image/main/image/image-20201029143847614.png)
 
-![image-20201029143942717](http://cdn.mingsec.com/image-20201029143942717.png)
+![image-20201029143942717](https://raw.githubusercontent.com/Minggle/image/main/image/image-20201029143942717.png)
 
-![image-20201029144003583](http://cdn.mingsec.com/image-20201029144003583.png)
+![image-20201029144003583](https://raw.githubusercontent.com/Minggle/image/main/image/image-20201029144003583.png)
 
-![image-20201029144027407](http://cdn.mingsec.com/image-20201029144027407.png)
+![image-20201029144027407](https://raw.githubusercontent.com/Minggle/image/main/image/image-20201029144027407.png)
 
-![image-20201029144043942](http://cdn.mingsec.com/image-20201029144043942.png)
+![image-20201029144043942](https://raw.githubusercontent.com/Minggle/image/main/image/image-20201029144043942.png)
 
-![image-20201029144142114](http://cdn.mingsec.com/image-20201029144142114.png)
+![image-20201029144142114](https://raw.githubusercontent.com/Minggle/image/main/image/image-20201029144142114.png)
 
 ## 4. 获取离线插件包
 
@@ -114,19 +114,19 @@ https://plugins.nessus.org/v2/offline.php
 
 姓名可以乱填，邮箱要是真的，active code会发送到邮箱。
 
-![image-20201029145540095](http://cdn.mingsec.com/image-20201029145540095.png)
+![image-20201029145540095](https://raw.githubusercontent.com/Minggle/image/main/image/image-20201029145540095.png)
 
 收到一封邮件，获取active code
 
-![image-20201029145641284](http://cdn.mingsec.com/image-20201029145641284.png)
+![image-20201029145641284](https://raw.githubusercontent.com/Minggle/image/main/image/image-20201029145641284.png)
 
 访问[https://plugins.nessus.org/v2/offline.php](https://plugins.nessus.org/v2/offline.php)获取离线包
 
-![image-20201029145821206](http://cdn.mingsec.com/image-20201029145821206.png)
+![image-20201029145821206](https://raw.githubusercontent.com/Minggle/image/main/image/image-20201029145821206.png)
 
 获取授权和离线安装包下载路径
 
-![image-20201029145915945](http://cdn.mingsec.com/image-20201029145915945.png)
+![image-20201029145915945](https://raw.githubusercontent.com/Minggle/image/main/image/image-20201029145915945.png)
 
 
 
@@ -177,6 +177,6 @@ PLUGIN_FEED_TRANSPORT = "Tenable Network Security Lightning";
 
 https://[nessus ip]:8834
 
-![image-20201102114429102](http://cdn.mingsec.com/image-20201102114429102.png)
+![image-20201102114429102](https://raw.githubusercontent.com/Minggle/image/main/image/image-20201102114429102.png)
 
 

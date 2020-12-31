@@ -8,7 +8,7 @@ keywords: ssh, error
 
 ## 新安装的kali 2020.2 修改/etc/ssh/sshd_config 配置文件远程登录后，使用Xshell登录依然报错
 
-![](http://cdn.mingsec.com/xshell_error.png)
+![](https://raw.githubusercontent.com/Minggle/image/main/image/xshell_error.png)
 1. 查看服务状态
 
 
@@ -20,7 +20,7 @@ sudo systemctl status sshd -l
 
 
 
-![](http://cdn.mingsec.com/sshd_status_error.png) 
+![](https://raw.githubusercontent.com/Minggle/image/main/image/sshd_status_error.png) 
 
 2. 修改sshd_config
 

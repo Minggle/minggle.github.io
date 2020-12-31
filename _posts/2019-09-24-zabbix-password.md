@@ -11,7 +11,7 @@ keywords: zabbix, password
 >近期时间稍空，准备继续折腾，发现登陆用户名及密码忘记了，所以进行了密码重置，本文用于记录使用。
 >文中所涉及到的密码、md5均为演示使用。
 
-![](http://cdn.mingsec.com/zabbix_1.jpg)
+![](https://raw.githubusercontent.com/Minggle/image/main/image/zabbix_1.jpg)
 
 
 # 0x01 查询数据库中密码
@@ -76,7 +76,7 @@ MariaDB [zabbix]> select alias,name,passwd from users;
 > 由于数据库密码存储为md5加密，如果密码不复杂，可以直接在线破解
 > [https://www.somd5.com/](https://www.somd5.com/)
 
-![](http://cdn.mingsec.com/zabbix_2.jpg)
+![](https://raw.githubusercontent.com/Minggle/image/main/image/zabbix_2.jpg)
 
 
 > 如果密码强度过高，则无法暴力破解，此时需要重置密码
