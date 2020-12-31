@@ -9,7 +9,7 @@ keywords: centos, Python, SSL, 有效期
 
 >   需求：
 >
->   SSL证书有效期监控，过期前一个月提醒。
+>   SSL证书有效期监控，过期前一个月邮件提醒。
 
 
 
