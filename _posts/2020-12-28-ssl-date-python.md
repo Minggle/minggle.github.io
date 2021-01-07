@@ -42,12 +42,13 @@ rm -rf /usr/bin/python
 rm -rf /usr/bin/pip
 ln -s /opt/python/python3.9.1/bin/python3.9 /usr/bin/python3.9
 ln -s /usr/bin/python3.9 /usr/bin/python3
+ln -s /usr/bin/python3 /usr/bin/python
 ln -s /opt/python/python3.9.1/bin/pip3.9 /usr/bin/pip3.9
 ln -s /usr/bin/pip3.9 /usr/bin/pip3
 ln -s /usr/bin/pip3 /usr/bin/pip
 
 # 修改python软链后需要修改部分命令环境变量
-sed 's|/usr/bin/python|/usr/bin/python2.7|g' /usr/bin/yum /usr/libexec/urlgrabber-ext-down
+sed 's|/usr/bin/python|/usr/bin/python2.7|g' /usr/bin/yum /usr/libexec/urlgrabber-ext-down -i
 ```
 
 
