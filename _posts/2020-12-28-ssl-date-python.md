@@ -57,8 +57,8 @@ sed 's|/usr/bin/python|/usr/bin/python2.7|g' /usr/bin/yum /usr/libexec/urlgrabbe
 
 ```shell
 curl -sS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup | sudo bash
-yum makecache
-yum -y install mariadb mariadb-server mariadb-devel
+proxychains4 yum makecache
+proxychains4 yum -y install mariadb mariadb-server mariadb-devel
 systemctl enable mariadb
 systemctl start mariadb
 mysql_secure_installation
