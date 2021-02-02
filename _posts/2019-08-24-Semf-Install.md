@@ -27,6 +27,7 @@ hostnamectl set-hostname semf
 logout
 ```
 ### 部署python
+
 ```
 cd /usr/local/src/ && wget https://www.python.org/ftp/python/3.6.5/Python-3.6.5.tar.xz
 tar -xvJf Python-3.6.5.tar.xz
@@ -54,7 +55,7 @@ rabbitmq-plugins enable rabbitmq_management#开启WEB端
 rabbitmqctl add_user <user> <password>#添加用户
 rabbitmqctl add_vhost semf#添加vhost
 rabbitmqctl set_user_tags <user> administrator#设置权限
-rabbitmqctl set_permissions -p semf root ".*" ".*" ".*"#正则全部权限
+rabbitmqctl set_permissions -p semf <user> ".*" ".*" ".*"#正则全部权限
 ```
 ### 防火墙设置
 ```
@@ -71,6 +72,7 @@ firewall-cmd --zone=public --list-port#查看所有开放端口
 cd /opt/ && git clone https://gitee.com/gy071089/SecurityManageFramwork.git
 ```
 ### 修改配置文件
+
 ```
 cd /opt/SecurityManageFramwork/SeMF && vim settings.py
 #设置网站根地址
@@ -87,12 +89,13 @@ EMAIL_USE_TLS = True               #与SMTP服务器通信时，是否启动TLS�
 SERVER_EMAIL = 'xxxxxxxx@163.com'
 DEFAULT_FROM_EMAIL = '安全管控平台xxxxxxxx@163.com>'
 #设置队列存储
-BROKER_URL = 'amqp://root:toor@semf/semf'    #设置与rabbitmq一致
+BROKER_URL = 'amqp://<user>:<password>@<hostname>/semf'    #设置与rabbitmq一致
 CELERY_ACCEPT_CONTENT = ['pickle', 'json', 'msgpack', 'yaml']
+
 ```
 ### 初始化安装配置
 ```
-python3 -m pip install -r requirements.txt#安装python库
+python3 -m pip install -r requirements.txt -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host=mirrors.aliyun.com #安装python库
 python3 manage.py makemigrations#生成数据表
 python3 manage.py migrate
 python3 manage.py createsuperuser#创建超级管理员
@@ -103,11 +106,13 @@ Password (again):
 Superuser created successfully.
 ```
 ### 数据库初始化
+
 ```
 python3 cnvd_xml.py #初始化数据库，主要生成角色，权限等信息
 python3 initdata.py #用于同步cnvd漏洞数据文件，文件位于cnvd_xml目录下，可自行调整，该文件夹每周更新一次，
 ```
 ### 创建异步任务脚本
+
 ```
 cat >>celery.sh<<EOF
 python3 -m celery -A SeMF worker -l info --autoscale=10,4 >> /opt/SeMF/SecurityManageFramwork/logs/crlery.log 2>&1 &
@@ -127,7 +132,7 @@ python3 /opt/SeMF/SecurityManageFramwork/manage.py runserver 0.0.0.0:8000 >> /op
 echo 'Start SEMF'
 EOF
 chmod u+x runsemf.sh 
-sudo sh celery.sh 
+sudo sh runsemf.sh 
 ```
 ### 优化supervisor守护进程
 ```
@@ -139,7 +144,7 @@ touch /opt/SeMF/SecurityManageFramwork/conf/celery.conf
 touch /opt/SeMF/SecurityManageFramwork/conf/semf.conf
 ```
 ```
-cat >>conf/semf.conf<<EOF
+cat >>conf/celery.conf<<EOF
 [program:celery]
 command=python3 -m celery -A SeMF worker -l info --autoscale=10,4     ; supervisor启动命令
 directory=/opt/SeMF/SecurityManageFramwork/                                                 ; 项目的文件夹路径
@@ -153,7 +158,7 @@ stderr_logfile=/opt/SeMF/SecurityManageFramwork/logs/celerylog.err              
 EOF
 ```
 ```
-cat >>runsemf.sh<<EOF
+cat >>conf/semf.conf<<EOF
 [program:semf]
 command=python3 manage.py runserver 0.0.0.0:8000     ; supervisor启动命令
 directory=/opt/SeMF/SecurityManageFramwork/                                                 ; 项目的文件夹路径
