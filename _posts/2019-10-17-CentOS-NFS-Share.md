@@ -18,8 +18,9 @@ yum install -y nfs-utils
 
 ## 0x02 修改nfs配置
 ```
-chmoe 777 /data
-"MOUNTD_PORT=4001\nSTATD_PORT=4002\nLOCKD_TCPPORT=4003\nLOCKD_UDPPORT=4003\nRQUOTAD_PORT=4004" >> /etc/sysconfig/nfs
+mkdir /data
+chmod 777 /data
+echo -e "MOUNTD_PORT=4001\nSTATD_PORT=4002\nLOCKD_TCPPORT=4003\nLOCKD_UDPPORT=4003\nRQUOTAD_PORT=4004" >> /etc/sysconfig/nfs
 echo -e "/data 192.168.1.0/24(rw)" >> /etc/exports
 exportfs -r	#配置重新读取
 exportfs -v
