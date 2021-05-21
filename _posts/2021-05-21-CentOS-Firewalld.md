@@ -108,6 +108,30 @@ firewall-cmd --remove-rich-rule="rule family="ipv4" source address="192.168.1.10
 ```shell
 # firewall-cmd --zone=[区域名]  --add-forward-port=port=[被转发端口]:proto=tcp:toport=[转发后端口]   
 # eg.访问80端口被转发到7001 
-firewall-cmd  --permanent  --zone=public --add-forward-port=port=80:proto=tcp:toport=7001 --permanent 
+firewall-cmd --zone=public --add-forward-port=port=80:proto=tcp:toport=7001 --permanent 
+```
+
+### 3.5 四个zone
+
+-   `public`:仅允许访问本机的ssh dhcp ping服务
+-   `trusted`:允许任何访问
+-   `block`:阻塞任何来访请求(明确拒绝,有回应客户端)
+-   `drop`:丢弃任何来访的数据包(没有回应,节省服务端资源)
+
+```shell
+# 查看当前区域
+firewall-cmd --get-default-zone
+
+# 设置默认区域
+firewall-cmd --set-default-zone='trusted'
+
+# 查看区域配置
+firewall-cmd --zone='trusted' --list-all
+
+# 查看全部区域配置
+firewall-cmd  --list-all-zone
+
+# 添加源
+firewall-cmd --zone='trusted' --add-source='192.168.0.100'
 ```
 
