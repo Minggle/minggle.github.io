@@ -102,3 +102,12 @@ firewall-cmd --add-rich-rule="rule family="ipv4" source address="192.168.1.100" 
 ```shell
 firewall-cmd --remove-rich-rule="rule family="ipv4" source address="192.168.1.100" port protocol="tcp" port="7001" accept" --permanent
 ```
+
+### 3.4 端口转发
+
+```shell
+# firewall-cmd --zone=[区域名]  --add-forward-port=port=[被转发端口]:proto=tcp:toport=[转发后端口]   
+# eg.访问80端口被转发到7001 
+firewall-cmd  --permanent  --zone=public --add-forward-port=port=80:proto=tcp:toport=7001 --permanent 
+```
+
